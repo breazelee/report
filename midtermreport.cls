@@ -121,9 +121,7 @@ The LaTeX template for midterm report of BUAA]
 % 格式
 \CTEXsetup[
     format={\zihao{-3}\heiti},
-    number={\arabic{chapter},
     aftername={\quad},
-    % titleformat={},
     beforeskip={-.5\baselineskip},
     afterskip={\baselineskip},
 ]{chapter}
@@ -384,21 +382,23 @@ The LaTeX template for midterm report of BUAA]
 \newcommand{\titlech}{
     \begin{titlepage}
         \begin{center}
-            \centerline{\zihao{-2}\kaishu北京航空航天大学计算机学院 }
-            \centerline{\zihao{1}\heiti 硕士学位论文中期检查报告 }
-            
+            \vskip 150bp
+            \centerline{\zihao{-2}\kaishu\mtr@university\mtr@school }
+            \vskip 25bp
+            \centerline{\zihao{1}\heiti {硕士学位论文中期检查报告} }
+            \vskip 200bp
             {
                 \zihao{-3}\kaishu
                 \begin{tabular}[b]{ll}
                     论文题目： & \mtr@thesistitle \\[.3ex]
-                    专~~~~业： & \mtr@major       \\[.3ex]
+                    专~~~~~~~~业： & \mtr@major       \\[.3ex]
                     研究方向： & \mtr@direction   \\[.3ex]
-                    研~究~生： & \mtr@thesisauthor\\[.3ex]
-                    学~~~~号： & \mtr@studentid\\[.3ex]
-                    指导教师： & \mtr@teacher\quad\mtr@teacherdegree\\
+                    研~~究~~生： & \mtr@thesisauthor\\[.3ex]
+                    学~~~~~~~~号： & \mtr@studentid\\[.3ex]
+                    指导教师： & \mtr@teacher~~\mtr@teacherdegree\\
                 \end{tabular}
             }
-            \vskip 60bp
+            \vskip 160bp
             \centerline{\heiti\zihao{3}\mtr@university \mtr@school}
             \centerline{\heiti\zihao{3}\mtr@commityear ~~年~~\mtr@commitmonth ~~月~~\mtr@commitday ~~日}
         \end{center}
@@ -445,12 +445,12 @@ The LaTeX template for midterm report of BUAA]
     \def\mtr@direction{#1}
     \def\mtr@directioneng{#2}
 }
+
 % 提交时间
 \def\mtr@commityear{2016}
 \def\mtr@commitmonth{08}
 \def\mtr@commitday{08}
-\def\mtr@
-\newcommand{\commit}[3]{%
+\newcommand{\committime}[3]{%
     \def\mtr@commityear{#1}
     \def\mtr@commitmonth{#2}
     \def\mtr@commitday{#3}
@@ -466,7 +466,7 @@ The LaTeX template for midterm report of BUAA]
 \def\mtr@thesissubtitle{}
 \def\mtr@thesistitleeng{}
 \def\mtr@thesissubtitleeng{}
-\newcommand{\thesistitle}[2]{
+\newcommand{\thesistitle}[4]{
     \def\mtr@thesistitle{#1}
     \def\mtr@thesissubtitle{#2}
     \def\mtr@thesistitleeng{#3}
