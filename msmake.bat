@@ -20,22 +20,21 @@
 
 @echo off
 :init
-if /i {%1}=={bachelor} goto thesis
-if /i {%1}=={master} goto thesis
+if /i {%1}=={report} goto report
 if /i {%1}=={clean} goto clean
 if /i {%1}=={help} goto help
-if /i {%1}=={} goto help
+if /i {%1}=={} goto report
 goto help
 
 ::======================================
 :: 编译我的论文
 ::======================================
-:thesis
+:report
 echo 正在编译文件
-if not exist buaathesis.cls goto clserr
-if not exist buaathesis.bst goto bsterr
-if /i {%1}=={bachelor} set mythesis=sample-bachelor
-if /i {%1}=={master} set mythesis=sample-master
+if not exist midtermreport.cls goto clserr
+if not exist midtermreport.bst goto bsterr
+if /i {%1}=={report} set mythesis=midtermreport
+
 :: 如若主文件名更改，请将上面的"sample-bachelor"或"sample-master"更改。
 call xelatex %mythesis%
 if {%2}=={full} (goto full)
@@ -43,10 +42,12 @@ if errorlevel 1 goto myerr1
 echo 成功生成论文
 call %mythesis%.pdf
 goto end
+
 :full
 call bibtex %mythesis%
 if errorlevel 1 goto biberr
 call xelatex %mythesis%
+if errorlevel 1 goto myerr1
 call xelatex %mythesis%
 if errorlevel 1 goto myerr1
 echo 成功生成论文
@@ -58,7 +59,7 @@ goto end
 ::======================================
 :clean
 echo 删除编译临时文件
-del /f /q /s *.log *.glo *.idx *.ilg *.lof *.ind *.out *.thm *.toc *.lot *.loe *.out.bak *.blg *.synctex.gz
+del /f /q /s *.log *.glo *.idx *.ilg *.lof *.ind *.out *.thm *.toc *.lot *.loe *.out.bak *.blg *.synctex.gz 
 del /f /s *.dvi *.ps
 if {%2}=={more} (goto cleanmore)
 if {%2}=={empty} (goto cleanempty)
@@ -70,21 +71,6 @@ goto end
 del /f /q /s *aux *.bbl *.pdf
 goto end
 
-::======================================
-:: 帮助信息
-::======================================
-:help
-echo            输入msmake+下面的命令，选择进入相应操作
-echo                如输入命令“msmake bachelor”
-echo        msmake参数             说明
-echo     bachelor/master       生成我的论文
-echo	    clean                 清除生成的多余文件
-echo	    help                  显示本帮助信息
-echo     bachelor/master full  为首次或运行"clean more"命令后使用
-echo	    clean more            将清除所有当前目录下的无关文件
-echo 注意：所需编译的文件名必须是sample-bachelor.tex或sample-master.tex
-:: 忍不住吐槽，为了显示对齐，居然排得这么乱！
-goto end
 
 ::======================================
 :: 运行错误信息
@@ -92,12 +78,15 @@ goto end
 :myerr1
 echo 唉呀，生成论文失败了呢
 goto end
+
 :biberr
 echo 貌似木有参考文献数据库吧
 goto end
+
 :clserr
 echo 居然连cls模板都木有！闹哪样！
 goto end
+
 :bsterr
 echo 居然连bst的参考文献样式都木有！闹哪样！
 goto end
