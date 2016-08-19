@@ -102,7 +102,7 @@ The LaTeX template for midterm report of BUAA]
     \fancyhf{}
     \fancyhead[C]{\kaishu\zihao{-5}硕士学位论文中期检查报告}
     \fancyfoot[C]{
-        \raisebox{2ex}{\kaishu\zihao{-5}\mtr@university 计算机学院}\hfill
+        \raisebox{2ex}{\kaishu\zihao{-5}\mtr@university \mtr@school }\hfill
         \raisebox{2ex}{\kaishu\zihao{-5}.\quad\thepage\quad.}}
 
 }
@@ -119,7 +119,7 @@ The LaTeX template for midterm report of BUAA]
 \renewcommand{\contentsname}{\hspace*{\fill}目\qquad 录\hspace*{\fill}}
 \renewcommand\listfigurename{插\ 图\ 目\ 录}
 \renewcommand\listtablename{表\ 格\ 目\ 录}
-\renewcommand\bibname{\hspace*{\fill}参\ 考\ 文\ 献\hspace*{\fill}}
+\renewcommand\bibname{\hspace*{\fill}主\ 要\ 参\ 考\ 文\ 献\hspace*{\fill}}
 \renewcommand{\figurename}{图}
 \renewcommand{\tablename}{表}
 
@@ -405,11 +405,12 @@ The LaTeX template for midterm report of BUAA]
 \newcommand{\titlech}{
     \begin{titlepage}
         \begin{center}
-            \vskip 150bp
+            \centerline{~}
+            \vskip 50bp
             \centerline{\zihao{-2}\kaishu\mtr@university\mtr@school }
-            \vskip 25bp
+            \vskip 50bp
             \centerline{\zihao{1}\heiti {硕士学位论文中期检查报告} }
-            \vskip 200bp
+            \vskip 100bp
             {
                 \zihao{-3}\kaishu
                 \begin{tabular}[b]{ll}
@@ -421,7 +422,7 @@ The LaTeX template for midterm report of BUAA]
                     指导教师： & \mtr@teacher~~\mtr@teacherdegree\\
                 \end{tabular}
             }
-            \vskip 160bp
+            \vskip 100bp
             \centerline{\heiti\zihao{3}\mtr@university \mtr@school}
             \centerline{\heiti\zihao{3}\mtr@commityear ~~年~~\mtr@commitmonth ~~月~~\mtr@commitday ~~日}
         \end{center}
