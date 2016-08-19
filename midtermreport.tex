@@ -16,20 +16,20 @@
 \maketitle % 封面页眉页脚页码样式
 
 % 目录页眉页脚页码样式
-\frontmatter
 \pagestyle{frontmatter}% 前言页眉页脚样式
-
 \tableofcontents
 
 % 正文页眉页脚页码样式
 \mainmatter
-\pagestyle{mainmatter} % 正文页眉页脚样式
 
-\include{chap/chapter1-plan.tex} % 第一章chapter1.tex
-\include{chap/chapter2.finished.tex} % 第一章chapter1.tex
-\include{chap/chapter3.keytechnology.tex} % 第一章chapter1.tex
-\include{chap/chapter4.next.tex} % 第二章chapter2.tex
-\include{chap/chapter5.references.tex} % 第二章chapter2.tex
-% \bibliography{...} % 利用BibTeX 工具生成参考文献
+\pagestyle{mainmatter} % 正文页眉页脚样式
+\relaxclearpage
+\printtitle
+\include{data/chapter1-plan} % 第一章chapter1.tex
+\include{data/chapter2-finished} % 第二章chapter1.tex
+\include{data/chapter3-keytechnology} % 第三章chapter1.tex
+\include{data/chapter4-next} % 第二章chapter2.tex
+
+\include{data/reference} % 第二章chapter2.tex
 
 \end{document}

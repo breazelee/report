@@ -15,8 +15,8 @@ The LaTeX template for midterm report of BUAA]
 %%%%%%%%%% class options %%%%%%%%%%
 % 模板选项
 
-\newif\ifmidtermreport@color\midtermreport@colorfalse
-\DeclareOption{color}{\midtermreport@colortrue}
+\newif\ifmtr@color\mtr@colorfalse
+\DeclareOption{color}{\mtr@colortrue}
 
 % 其余选项传递给ctexbook
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{ctexbook}}
@@ -100,44 +100,66 @@ The LaTeX template for midterm report of BUAA]
 \fancypagestyle{mainmatter}{
     \renewcommand{\headrulewidth}{0.5bp} % 页眉线宽度
     \fancyhf{}
-    \fancyhead[C]{\songti\zihao{-5}硕士学位论文中期检查报告}
+    \fancyhead[C]{\kaishu\zihao{-5}硕士学位论文中期检查报告}
     \fancyfoot[C]{
-        \raisebox{2ex}{\songti\zihao{-5}\midtermreport@university 计算机学院}\hfill
-        \raisebox{2ex}{\songti\zihao{-5}.\quad\thepage\quad.}}
+        \raisebox{2ex}{\kaishu\zihao{-5}\mtr@university 计算机学院}\hfill
+        \raisebox{2ex}{\kaishu\zihao{-5}.\quad\thepage\quad.}}
+
 }
 
+% chapter page 也是mainmatter类型
+\fancypagestyle{plain}{
+    \pagestyle{fancy}
+}
 
 %%%%%%%%%% title %%%%%%%%%%
 % 标题
 
 % 汉化
-\renewcommand{\contentsname}{目\qquad 录}
+\renewcommand{\contentsname}{\hspace*{\fill}目\qquad 录\hspace*{\fill}}
 \renewcommand\listfigurename{插\ 图\ 目\ 录}
 \renewcommand\listtablename{表\ 格\ 目\ 录}
-\renewcommand\bibname{参\ 考\ 文\ 献}
+\renewcommand\bibname{\hspace*{\fill}参\ 考\ 文\ 献\hspace*{\fill}}
 \renewcommand{\figurename}{图}
 \renewcommand{\tablename}{表}
 
 % 格式
-\CTEXsetup[
-    format={\zihao{-3}\heiti},
-    aftername={\quad},
-    beforeskip={-.5\baselineskip},
-    afterskip={\baselineskip},
-]{chapter}
-\CTEXsetup[
-    format={\zihao{4}\heiti},
-    aftername={\quad},
-    beforeskip={.5\baselineskip},
-    afterskip={.5\baselineskip},
-]{section}
-\CTEXsetup[
-    format={\zihao{-4}\heiti},
-    aftername={\quad},
-    beforeskip={.5\baselineskip},
-    afterskip={.5\baselineskip},
-]{subsection}
+\ctexset{
+    chapter = {
+        format = \zihao{-3}\heiti,
+        nameformat = \zihao{-3}\heiti,
+        titleformat = \zihao{-3}\heiti,
+        name = {,},
+        aftername = {\quad},
+        number = \arabic{chapter},
+        beforeskip= {-.5\baselineskip},
+        afterskip= {.5\baselineskip}
+    },
+    section = {
+        format =  \zihao{4}\heiti ,
+        aftername = \quad ,
+        beforeskip = .5\baselineskip ,
+        afterskip = .5\baselineskip 
+    },
+    subsection = {
+        format={\zihao{-4}\heiti},
+        aftername={\quad},
+        beforeskip = .25ex plus 1ex minus .2ex ,
+        afterskip = .3ex plus .2ex 
+    }
+}
 
+\newcommand\relaxclearpage{
+    \let\tmpdp\cleardoublepage%
+    \let\tmpp\clearpage%
+    \let\cleardoublepage\relax%
+    \let\clearpage\relax%
+}
+
+\newcommand\resetclearpage{
+    \let\cleardoublepage\tmpdp%
+    \let\clearpage\tmpp%
+}
 
 %%%%%%%%%% contents %%%%%%%%%%
 % 目录
@@ -149,7 +171,7 @@ The LaTeX template for midterm report of BUAA]
 \titlecontents{section}[2em]{\vspace{0.1\baselineskip}\songti\zihao{5}}{\thecontentslabel\ }{}
     {\hspace{.5em}\titlerule*[4pt]{$\cdot$}\contentspage}
 
-\titlecontents{subsection}[4em]{\vspace{0.1\baselineskip}\songti\zihao{-4}}{\thecontentslabel\ }{}
+\titlecontents{subsection}[4em]{\vspace{0.1\baselineskip}\songti\zihao{5}}{\thecontentslabel\ }{}
     {\hspace{.5em}\titlerule*[4pt]{$\cdot$}\contentspage}
 
 
@@ -171,7 +193,7 @@ The LaTeX template for midterm report of BUAA]
 % 交叉引用
 
 \RequirePackage[xetex,unicode]{hyperref}
-\ifmidtermreport@color
+\ifmtr@color
     \hypersetup{colorlinks}
 \else
     \hypersetup{hidelinks}
@@ -287,7 +309,7 @@ The LaTeX template for midterm report of BUAA]
     xleftmargin=3em,
     xrightmargin=3em,
 }
-\ifmidtermreport@color
+\ifmtr@color
     \lstset{
         numberstyle=\color{gray},
         keywordstyle=\color{blue},
@@ -331,7 +353,7 @@ The LaTeX template for midterm report of BUAA]
 % 文件目录
 
 \RequirePackage{dirtree}
-\ifmidtermreport@color
+\ifmtr@color
     \renewcommand*\DTstylecomment{\ttfamily\color{dkgreen}}
     \renewcommand*\DTstyle{\ttfamily\color{red}}
 \fi
@@ -340,17 +362,17 @@ The LaTeX template for midterm report of BUAA]
 % 图表标题
 
 \RequirePackage{caption}
-\DeclareCaptionFormat{midtermreportfigure}{\bf\songti\zihao{5}{#1\textrm{#2}#3}}
-\DeclareCaptionFormat{midtermreporttable}{\bf\songti\zihao{5}{#1\textrm{#2}#3}}
-\DeclareCaptionFormat{midtermreportlstlisting}{\bf\songti\zihao{5}{#1\textrm{#2}#3}}
+\DeclareCaptionFormat{mtrfigure}{\bf\songti\zihao{5}{#1\textrm{#2}#3}}
+\DeclareCaptionFormat{mtrtable}{\bf\songti\zihao{5}{#1\textrm{#2}#3}}
+\DeclareCaptionFormat{mtrlstlisting}{\bf\songti\zihao{5}{#1\textrm{#2}#3}}
 
 \RequirePackage{remreset}
 \@removefromreset{table}{chapter}
 \@removefromreset{figure}{chapter}
 %使图表的标号与章节无关
-\captionsetup[figure]{format=midtermreportfigure,labelsep=quad}
-\captionsetup[table]{format=midtermreporttable,labelsep=quad}
-\captionsetup[lstlisting]{format=midtermreportlstlisting,labelsep=quad}
+\captionsetup[figure]{format=mtrfigure,labelsep=quad}
+\captionsetup[table]{format=mtrtable,labelsep=quad}
+\captionsetup[lstlisting]{format=mtrlstlisting,labelsep=quad}
 \renewcommand{\thefigure}{\arabic{figure}}
 \renewcommand{\thetable}{\arabic{table}}
 \renewcommand{\theequation}{\arabic{chapter}.\arabic{equation}}
@@ -370,7 +392,8 @@ The LaTeX template for midterm report of BUAA]
 
 % 正文前的页码设置位大写罗马数字
 \renewcommand{\frontmatter}{
-    \cleardoublepage
+    % \cleardoublepage
+    \newpage
     \@mainmatterfalse
     \pagenumbering{roman}
 }
@@ -495,4 +518,12 @@ The LaTeX template for midterm report of BUAA]
 \newcommand{\teacherdegree}[2]{%
     \def\mtr@teacherdegree{#1}
     \def\mtr@teacherdegreeeng{#2}
+}
+
+\newcommand{\printtitle}{
+       
+    \centerline{~} 
+    \centerline{~} 
+    \centerline{\songti\zihao{2}\mtr@thesistitle }
+    \vskip 30pt
 }
