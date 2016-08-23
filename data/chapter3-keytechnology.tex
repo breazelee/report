@@ -1,10 +1,14 @@
 % !TEX root = ../midtermreport.tex
 % !Mode:: "TeX:UTF-8"
 \chapter{关键技术和难点}
+\label{chap:keytechnology}
 
 \section{光滑粒子流体仿真}
+\label{sec:sph}
 
 \subsection {光滑粒子流体动力学综述}
+\label{subsec:sph-rev}
+
 SPH方法是配点法的一种。
 光滑粒子流体动力学（SPH）技术是有\citeauthor{Lucy1977A}\upcite{Lucy1977A}
 和\citeauthor{Gingold1977Smoothed}\upcite{Gingold1977Smoothed}于1977年最早提出，
@@ -72,6 +76,7 @@ Randies和Libersky扩展了应力点方法，
 要进行更深入的研究。
 
 \chapter{SPH基本公式与概念}
+\label{chap:sph-base-equ}
 
 \qquad{}作为一种无网格方法，光滑质点流体动力和其它的粒子方法相比具有相似性，
 同时也有它的特殊性。本章详细地介绍SPH方法的基本公式和概念。
@@ -88,6 +93,8 @@ SPH的近似方法是SPH方法的重要部分，该方法包括函数的积分�
 理解SPH的各种变形形式有重要的作用，因此有必要对以上问题进行详细的讨论。
 
 \section{SPH的基本概念}
+\label{sec:sph-base-conc}
+
 正如第一章所介绍地那样，SPH方法应用于流体力学问题，
 就要求解流体力学问题中关于密度、速度、动量、能量等区域变量的偏微分方程。
 除了一些特殊情况，要得到这些的偏微分方程的解析解是不可能的。
@@ -105,54 +112,58 @@ SPH的近似方法是SPH方法的重要部分，该方法包括函数的积分�
 但是关键问题是如何保证数值解的稳定性，
 特别是粒子在支持域内高度无序时。
 
-\item 由于区域内的粒子没有网格的约束,因此这些粒子之间没有相关性。
-这为数学上提供了SPH方法稳定性基础,
-因为用积分形式描述粒子通常很稳定,只要数值积分能被正确地执行。
+\item 由于区域内的粒子没有网格的约束，因此这些粒子之间没有相关性。
+这为数学上提供了SPH方法稳定性基础，
+因为用积分形式描述粒子通常很稳定，只要数值积分能被正确地执行。
 
-\item 函数$f(x)$采用$f(x)=\int\limits_\Omega{}f(x')W(x-x',h)dx'$的积分近似表达,
+\item 函数$f(x)$采用$f(x)=\int\limits_\Omega{}f(x')W(x-x',h)dx'$的积分近似表达，
 这种方法在SPH方法中就称为核估计（kemel estimation）。
-核估计是一种使用粒子来做近似估计的方法,也称作核近似。
-这种方法在区域变量和其导数的求解是通过支持域内相邻粒子的相关变量加权求和来实现的,
-这样会产生带状或稀疏离散的系统矩阵,这种矩阵形式与计算效率紧密相关。
+核估计是一种使用粒子来做近似估计的方法，也称作核近似。
+这种方法在区域变量和其导数的求解是通过支持域内相邻粒子的相关变量加权求和来实现的，
+这样会产生带状或稀疏离散的系统矩阵，这种矩阵形式与计算效率紧密相关。
 因为大变形问题需要大量的粒子来描述问题区域。
-如果矩阵是满矩阵的话,这将花掉难以接受的时间来解如此大的系统方程。
+如果矩阵是满矩阵的话，这将花掉难以接受的时间来解如此大的系统方程。
 
-\item 在每个时间步都要进行粒子近似,
+\item 在每个时间步都要进行粒子近似，
 因此相关变量值的确定取决于当前时间步时周围粒子的分布。
-SPH的适应性是由每个时间步上在支持区域里粒子的分布来决定的,
+SPH的适应性是由每个时间步上在支持区域里粒子的分布来决定的，
 而且SPH的自适应性在区域变量近似的前一步执行的。
-为保证积分的准确性和数值的稳定性,在求和过程中需要使用足够多的粒子。
+为保证积分的准确性和数值的稳定性，在求和过程中需要使用足够多的粒子。
 
 \item 进行粒子近似要把所有的以偏微分方程表达的区域函数
 转换成只与时间有关的离散形式的普通微分方程。
-普通的微分方程可以用显式的积分算法获得更快的步进方法,
-这样就可以得到所有粒子所携带信息的时间历程,
+普通的微分方程可以用显式的积分算法获得更快的步进方法，
+这样就可以得到所有粒子所携带信息的时间历程，
 这也是解决动力学问题的一种常用方法。
-在SPH方法中,需要找到一种合适的方法来决定满足稳定积分所需的时间步长。
+在SPH方法中，需要找到一种合适的方法来决定满足稳定积分所需的时间步长。
 
 \end{enumerate}\qquad{}
 以上五点说明SPH方法是一种无网格、自适应、稳定的Lagrangian解法。
 
 \section{SPH方法的必要公式}
+\label{sec:sph-base-equ}
+
 \subsection{函数的积分描述}
+\label{subsec:fun-int-equ}
+
 SPH方法有两个主要的步骤：
 第一步是积分表达或区域函数的核近似;第二个步骤就是粒子近似。
-在第一个步骤中,当核函数与一个任意函数相乘,
+在第一个步骤中，当核函数与一个任意函数相乘，
 然后在支持域内积分就给出了一个函数核函数的积分表达形式。
 这种函数的近似方法和更多细节参考Liu的专著\upcite{Lucy1977A}。
 离散系统中某个粒子处函数的粒子近似是由支持域内粒子的相关值的和来实现的。
 
-在SPH方法中,函数$f(x)$的积分表达的概念由恒等式\ref{sph-base-function}:
+在SPH方法中，函数$f(x)$的积分表达的概念由恒等式\ref{equ:sph-base-function}:
 
 \begin{equation}
-\label{sph-base-function}
+\label{equ:sph-base-function}
 f(x) = \int\limits_\Omega{}f(x')\delta(x-x')dx'
 \end{equation}
 
-$f(x)$是三维向量$x$的函数,$\delta(x-x')$是$\delta$函数
+$f(x)$是三维向量$x$的函数，$\delta(x-x')$是$\delta$函数
 
 \begin{equation}
-\label{delta-function}
+\label{equ:delta-function}
 \delta(x-x') = \left\{
 \begin{array}{rl}
 1 & x = x'\\
@@ -160,46 +171,202 @@ $f(x)$是三维向量$x$的函数,$\delta(x-x')$是$\delta$函数
 \end{array} \right.
 \end{equation}
 
-在\ref{delta-function}式中，$\Omega$为包括向量$x$的积分体积，
-\ref{sph-base-function}式表明一个函数可以用一种积分形式来表达，
-由于使用$\delta$函数，\ref{sph-base-function}式的积分表达是精确成立的,
+在\ref{equ:delta-function}式中，$\Omega$为包括向量$x$的积分体积，
+\ref{equ:sph-base-function}式表明一个函数可以用一种积分形式来表达，
+由于使用$\delta$函数，\ref{equ:sph-base-function}式的积分表达是精确成立的，
 只要$f(x)$在$\Omega$中有意义并且连续。
 
-如果$\delta(x-x')$函数被函数$W(x-x',h)$代替,$f(x)$的积分可表达成:
+如果$\delta(x-x')$函数被函数$W(x-x',h)$代替，$f(x)$的积分可表达成:
 \begin{equation}
-\label{sph-base-kernel}
+\label{equ:sph-base-kernel}
 f(x)=\int\limits_\Omega{}f(x')W(x-x',h)dx'
 \end{equation}
 
-$W(x-x',h)$为光滑核函数或核函数。核函数中,$h$为光滑长度,
-它决定光滑函数的影响区域的半径。注意到只要$W(x-x',h)$不是占函数,
-\ref{sph-base-kernel}分表达式就只是近似成立。
+$W(x-x',h)$为光滑核函数或核函数。核函数中，$h$为光滑长度，
+它决定光滑函数的影响区域的半径。注意到只要$W(x-x',h)$不是占函数，
+\ref{equ:sph-base-kernel}分表达式就只是近似成立。
 
-SPH方法中有个规矩,核近似算子由角括号标出,因此公式\ref{sph-base-kernel}写成：
+SPH方法中有个规矩，核近似算子由角括号标出，因此公式\ref{equ:sph-base-kernel}写成：
 \begin{equation}
-\label{sph-base-kernel:s}
+\label{equ:sph-base-kernel:s}
 < f(x) >=\int\limits_\Omega{}f(x')W(x-x',h)dx'
 \end{equation}
 
-核函数$W(x-x',h)$的构造方法将在第三章详细探讨,这里只简单介绍所需的条件。
+核函数$W(x-x',h)$的构造方法将在第三章详细探讨，这里只简单介绍所需的条件。
 第一个条件称为核函数的正交条件:
 \begin{equation}
-\label{kernel-function-condition1}
+\label{equ:kernel-function-condition1}
 \int\limits_\Omega{}W(x-x',h)dx = 1
 \end{equation}
 这个条件也称为一致性条件。因为核函数的积分值都具有一致性。
 
-第二个条件规定核函数具有$\delta$函数的特性,当光滑长度$h$接近零时,得到
+第二个条件规定核函数具有$\delta$函数的特性，当光滑长度$h$接近零时，得到
 \begin{equation}
-\label{kernel-function-condition2}
+\label{equ:kernel-function-condition2}
 \lim_{h \rightarrow 0}W(x-x',h) = \delta(x-x')
 \end{equation}
 
-第三个条件称之为核函数的紧支条件(compact condition)
+第三个条件称之为核函数的紧凑条件(compact condition)
 \begin{equation}
-\label{kernel-function-condition3}
+\label{equ:kernel-function-condition3}
 W(x-x',h) = 0 \qquad \text{当}|x-x'| > kh
 \end{equation}
+
+由公式\ref{equ:kernel-function-condition3}可知，核函数的支持域为$|x-x'|\le{}kh$，
+$k$为一个常数，与$x$点的核函数形式有关，决定核函数的支持域的大小。
+根据紧凑条件，把整个区域上的积分变成了核函数支持域上的积分。
+SPH方法的核近似通常具有$h^2$的精度或二阶精度。其原因如下:
+
+SPH方法中积分表达式的误差可以由$f(x')$在$x$点的Taylor展开来估计。
+\begin{equation}
+\label{equ:sph-base-taylor}
+\begin{aligned}
+< f(x) > & = \int\limits_\Omega{}\left[ f(x) + f'(x)(x'-x) -r(x'-x) \right[{} 
+			W(x-x',h)dx'\\
+		 & = f (x)\int\limits_\Omega{}W(x-x',h)+
+		     f'(x)\int\limits_\Omega{}(x-x')W(x-x',h)dx' + r(h^2)
+\end{aligned}
+\end{equation}
+
+
+其中$r$为残差，注意到如果$W$是与$x$有关的偶函数，$(x-x')W(x-x',h)$就为奇函数，
+于是有
+\begin{equation}
+\label{equ:odd-function-integral-0}
+\int\limits_\Omega{}(x-x')W(x-x',h)dx' = 0
+\end{equation}
+
+由公式\ref{equ:kernel-function-condition1}和公式\ref{equ:odd-function-integral-0}，
+公式\ref{equ:sph-base-taylor}可表示为
+
+\begin{equation}
+\label{equ:shp-function-recursion}
+<f(x)> = f(x) +r(h^2)
+\end{equation}
+
+由以上的方程可知，在SPH方法中核估计是具有二阶精度。
+然而，这种核近似也不是都具有二阶精度。
+如果核函数不是一个偶函数，或者正交性得不到满足，以上的结论就不成立。
+
+\subsection{函数离散形式的积分表达}
+\label{subsec:fun-dis-int-equ}
+
+对于空间导数$\nabla{}\cdot{}f(x)$的表达式可以由方程\ref{equ:sph-base-kernel:s}
+中的$\nabla{}\cdot{}f(x)$代替$f(x)$得到
+\begin{equation}
+\label{equ:shp-function-dis}
+<f(x)> = \int\limits_\Omega{}\left[{}\nabla{}\cdot{}f(x')\right]{}W(x-x',h)dx'
+\end{equation}
+积分的离散过程与主坐标有关
+\begin{equation}
+\left[{}\nabla{}\cdot{}f(x')\right]{}W(x-x',h) = 
+\nabla\left[{}f(x')W(x-x',h)-f(x')\cdot\nabla{}W(x-x',h)\right]
+\end{equation}
+还是
+\begin{equation}
+\left[{}\nabla{}\cdot{}f(x')\right]{}W(x-x',h) = 
+\nabla\left[{}f(x')W(x-x',h)\right]{}-f(x')\cdot\nabla{}W(x-x',h)
+\end{equation}
+于是可以得到
+% TODO 插入函数2-13
+\begin{equation}
+<\nabla{}\cdot{}f(x')> 
+= \int\limits_\Omega{}\left[{}\nabla{}\cdot{}f(x')\right]{}W(x-x',h)dx' 
+- \int\limits_\Omega{}f(x')\cdot\nabla{}W(x-x',h)dx'
+\end{equation}
+
+上式方程的右边第一项可以用高斯公式得到
+% TODO 插入函数2-14
+\begin{equation}
+\label{equ:sph-dis-int-guass}
+<\nabla{}\cdot{}f(x')> 
+= \int\limits_s f(x') W(x-x',h)\cdot\vec{n}dx'
+- \int\limits_\Omega{}f(x')\cdot\nabla{}W(x-x',h)dx'
+\end{equation}
+
+$\vec{n}$为垂直于表面$S$的单位外法向量。
+
+由于核函数$W$满足紧凑条件，当自由表面在研究问题的区域内，
+表面积分项就为零，如图\ref{fig:rel-con-suf-int-zero}
+如果支持域不全在研究问题区域内，核函数$W$的支持域被边界截去，
+此时表面积分就不再是零，如图\ref{fig:rel-con-suf-int-no-zero}
+在这种情况下，如果公式\ref{equ:sph-dis-int-guass}
+边界效应就要用特殊的方法进行修正来弥补。
+\begin{figure}[h!]
+    \centering
+    \subfigure[被包含时为零]{
+        \label{fig:rel-con-suf-int-zero}
+        \includegraphics[width=.35\textwidth]{figure/buaamark.eps}
+    }
+    \hspace{3em} % 水平间隔
+    \subfigure[不被包含时不为零]{
+        \label{fig:rel-con-suf-int-no-zero}
+        \includegraphics[width=.35\textwidth]{figure/buaamark.eps}
+    }
+    \caption{支持域与研究区之间的关系与表面积分}
+    \label{fig:rel-con-suf-int}
+\end{figure}
+
+图\ref{fig-sub}为子图排列，两个子图有各自的图题，
+分别为图\ref{fig-sub-l}和图\ref{fig-sub-r}，并有一个共同的图题。
+\begin{figure}[h!]
+    \centering
+    \subfigure[并排小图a]{
+        \label{fig-sub-l}
+        \includegraphics[width=.2\textwidth]{figure/buaamark.eps}
+    }
+    \hspace{7em} % 水平间隔
+    \subfigure[并排小图b]{
+        \label{fig-sub-r}
+        \includegraphics[width=.2\textwidth]{figure/buaamark.eps}
+    }
+    \caption{子图并排的示例}
+    \label{fig-sub}
+\end{figure}
+
+因此，对于这些研究问题区域的点可以表示如下：
+
+\begin{equation}
+\label{equ:tmp2-15}
+<\nabla{}\cdot{}f(x')> 
+= -\int\limits_\Omega{}f(x')\nabla\cdot{}W(x-x',h)dx'
+\end{equation}
+
+由上面的公式可以看出,
+对函数$f(x)$的差分运算转化成为对核函数$W(x-x',h)$的差分运算。
+也就是说,在SPH方法中区域函数的导数可以用函数值和核函数的导数来决定,
+而不是用函数本身的导数来决定。
+
+
+\subsection{粒子近似}
+在SPH方法中,
+整个系统是由有限数目的分布在整个空间的携带一定信息的粒子来描述。
+粒子近似是SPH方法的另一个核心的问题。
+
+粒子近似就是与SPH核近似有关的连续积分表达\ref{equ:sph-base-kernel:s}
+式和\ref{equ:kernel-function-condition1}式
+可以转换成为由支持域内的粒子之和的离散形式的过程,
+如图\ref{fig:rel-con-suf-int-zero}所示，
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=400bp]{figure/particle_i_sim.png}
+    \caption{粒子近似采样范围}
+    \label{fig-sub}
+\end{figure}
+
+穷小体积$dx'$用相关粒子的体积$\Delta{}V_j$砚来代替,
+那么位于$j$处的粒子质量$m_j$就可以表示成:
+
+\begin{equation}
+\label{equ:tmp2-16}
+m_j = \Delta{}V_j \varrho_j
+\end{equation}
+
+
+
+
+
+
 
 
 

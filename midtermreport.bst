@@ -2909,7 +2909,7 @@ FUNCTION {format.lab.names}                                      %wk
         'skip$
         { s #2 "{ff }{vv }{ll}{ jj}" format.name$ "others" =
             { " {\em et~al.}" * }
-            { " and " * s #2 "{vv~}{ll}" format.name$ * }           %wk
+            { " \& " * s #2 "{vv~}{ll}" format.name$ * }           %wk
             if$
         }
         if$
