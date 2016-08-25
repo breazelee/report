@@ -1,12 +1,35 @@
 % !TEX root = ../midtermreport.tex
 % !Mode:: "TeX:UTF-8"
 \chapter{下一阶段工作计划}
-\label{chapter-basic}
+\label{chap:next}
 
-\texttt{.bib}参考文献数据库文件中，每个类别后的第一个为标号，
-在示例的\texttt{bibs.bib}中第一个书箱的标号为\textbf{kottwitz2011latex}，
-在引用此文献时，使用\verb|\upcite{kottwitz2011latex}|即可得到此文献\upcite{kottwitz2011latex}
-的引用\footnote{左侧“文献”的右上方即得到了此文献的引用。}。
+
+\section{尚未完成的工作}
+	本论文尚未完全完成的工作包括
+	
+\begin{enumerate}
+	\item 仿真过程过的校正
+	\item 系统的完善和集成
+	\item 系统全面的功能性测试
+	\item 毕业设计论文的撰写
+\end{enumerate}
+\section{存在的问题}
+
+目前实验效果已经能够完成时序数据的建模和插值过程，但存在两个时间帧数据的平滑过渡问题，
+即存在两帧数据之间发生跳变现象，这也是目前没有完全克服的问题，
+还需在下一步工作中设计改进方案。
+
+\section{解决问题的技术思路或措施}
+目前已经基本实现光滑过度，但还存在存在一些瑕疵，下一步考虑引入后向插值技术，校正模拟结果，
+对仿真过程进行完善。
+\section{下一阶段计划}
+
+\begin{enumerate}
+	\item 8月至9月，完善衰减系数的逆向求解算法
+	\item 9月至10月，系统集成和测试
+	\item 10月至12月，撰写毕业论文	
+\end{enumerate}
+
 
 
 

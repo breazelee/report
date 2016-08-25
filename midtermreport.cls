@@ -119,7 +119,7 @@ The LaTeX template for midterm report of BUAA]
 \renewcommand{\contentsname}{\hspace*{\fill}目\qquad 录\hspace*{\fill}}
 \renewcommand\listfigurename{插\ 图\ 目\ 录}
 \renewcommand\listtablename{表\ 格\ 目\ 录}
-\renewcommand\bibname{\hspace*{\fill}主\ 要\ 参\ 考\ 文\ 献\hspace*{\fill}}
+\renewcommand\bibname{} 
 \renewcommand{\figurename}{图}
 \renewcommand{\tablename}{表}
 
@@ -273,7 +273,7 @@ The LaTeX template for midterm report of BUAA]
 \RequirePackage{enumitem}
 \setlist{noitemsep}
 \setlist[1,2]{labelindent=\parindent}
-\setlist[enumerate,1]{label=\arabic*、}
+\setlist[enumerate,1]{label=（\arabic*）}
 \setlist[enumerate,2]{label=（\arabic*）}
 \setlist{
     topsep=0pt,
