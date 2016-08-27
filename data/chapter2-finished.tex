@@ -180,34 +180,61 @@ U、V、W网格依次在经向，纬向，海拔三个方向减少半个格点�
 
 
 本文采用基于PBF（Position-basis fluid）的流体仿真算法。
-在仿真循环过程中，首先是通过分析外力变化，分别更新粒子的速度和预期位置，
-其次是计算粒子在预期位置的邻居，通过计算粒子之间相互作用导致的位移变化，
-并更新预期位置，通过迭代计算直至收敛，然后再根据预期位置和仿真前的位置更新速度，
-以及计算由于粘滞阻力和科里奥利力，最后更新粒子的位置。流程图如下图\ref{fig:pbf-flow-chart}所示：
+在流体仿真领域，强制不可压缩性是一个很重要的特性，同时也是十分耗时的计算过程。
+虽然最近的工作已经提高很效率，但对于实时应用来说还是不切实际的。
+PBS是Miles和Matthias\upcite{Macklin2013Position}在2013年提出了一种融入
+PBD（Position Based Dynamics）方法的迭代求解密度的方法，
+通过求解一组位置约束，从而强制保证密度不变。
+此方法可以实现类似SPH（Smoothed Particle Hydrodynamic）的仿真过程，
+同时保留了几何关系的稳定性，最重要的是保持满足实时应用中对长时间步长的要求。
+通过引入一个人工压力用来改善粒子的分布，创建表面张力并且降低传统SPH对邻居的需求。
+最后通过应用涡旋约束作为速度处理来解决能量损失的问题。
+
+其算法伪代码如算法 \ref{alg:pbf-algorithm} 所示。
+
+\begin{algorithm}
+  \caption{PBF算法}
+  \label{alg:pbf-algorithm}
+\begin{algorithmic}
+\FORALL{粒子 $P_i$}
+\STATE 应用外力更新加速度 $v_i \Leftarrow v_i + \Delta{}tf_{ext}(x_i) $
+\STATE 计算预计位置$x_i^{*} \Leftarrow x_i + \Delta{} tv_i$
+\ENDFOR
+\FORALL{粒子 $P_i$}
+\STATE 查找邻居粒子$N_i(x_i^*)$
+\ENDFOR
+\WHILE{迭代器 < 迭代次数}
+\FORALL{粒子 $P_i$}
+\STATE 计算$\lambda_i$
+\ENDFOR
+\FORALL{粒子 $P_i$}
+\STATE 计算位置校正$\Delta{}p_i$
+\STATE 执行碰撞检测和响应
+\ENDFOR
+\FORALL{粒子 $P_i$}
+\STATE 校正位置$x_i^* \Leftarrow x_i^* + \Delta{}p_i$
+\ENDFOR
+\ENDWHILE
+\FORALL{粒子 $P_i$}
+\STATE 校正速度$v_i \Leftarrow \frac{1}{\Delta{}t}(x_i^*-x_i)$
+\STATE 应用涡旋约束和XSPH粘性
+\STATE 校正位置信息$x_i \Leftarrow x_i^*$
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
 \begin{figure}
 	\centering
 	\includegraphics[width = 350bp]{figure/PBF-flow-chart.png}
 	\caption{PBF流程图}
 	\label{fig:pbf-flow-chart}
 \end{figure}
+在仿真循环过程中，首先是通过分析外力变化，分别校正粒子的速度和预计的位置；
+其次是计算粒子在预期位置的邻居，通过执行碰撞检测和响应并校正预期位置，通过迭代计算直至收敛；
+然后再根据预期位置和仿真前的位置校正速度，引用涡旋约束和人工粘性，最后校正粒子的位置。
+流程图如下图\ref{fig:pbf-flow-chart}所示：
 
-本流体仿真算法是本位论的重点研究内容，详细见第\ref{chap:keytechnology}部分。
 
-平滑粒子流体力学（Smoothed Particle Hydrodynamics）起源于二十世纪七十年代末，
-当时一些宇宙学家用这类方法研究天体形成。
-图形学中大量使用SPH技术是以2003年的
-“Particle-Based Fluid Simulation for Interactive Applications”
-为开端。
-SPH技术容易实现，但要求时间步长非常小。另外，常规SPH的参数比较多，调整相对比较困难。
-
-流体是否逼真，与流体模拟技术中不可压缩的实现密切相关。
-传统的SPH基于粒子技术,只能依靠小步长、大压强来实现流体的不可压缩性,
-非常慢无法做到真实感流体的实时模拟。
-2009年“Predictive-corrective incompressible SPH”
-使用迭代技术有效地加大了时间步长，同时保证了流体不可压缩的性质。
-在接下来几年，此文启发了很多人。
-特别是SIGGRAPH 2013中的"position based fluids"文章很短，
-但是实现了令人感到惊艳的实时效果。
+本流体仿真算法是本位论的重点研究内容，详细见第\ref{sec:fulid-simulation}部分。
 
 \section{时序数据校准}
 
@@ -264,14 +291,13 @@ Wendling\upcite{Madronich1999The}通过模拟冰和水散射发生时的情况�
 \begin{figure}
 \centering
 \includegraphics{figure/ice_water_phase_function.jpg}
-\caption{冰水粒子香味函数对比}
+\caption{冰水粒子相位函数对比}
 \label{fig:ice_water_phase_function}
 \end{figure}
 
 由此可知，对云进行可视化时应当针对不同的粒子进行分别处理。
 根据气象学对云的分类，近地面的云由于温度较高，多为水云，而冰云则多位于海拔较高的地方。
 由于本文主要处理拍摄的自然图像，海拔较低，因此统一采用MIE方程进行近似。
-
 
 \subsection{基本光照模型原理}
 

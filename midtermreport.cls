@@ -35,8 +35,10 @@ The LaTeX template for midterm report of BUAA]
 
 \RequirePackage{amsmath,amssymb,amsfonts,mathrsfs,bm}
 \RequirePackage[amsmath,thmmarks,hyperref]{ntheorem}
+\RequirePackage[retainorgcmds]{IEEEtrantools}
 \RequirePackage{txfonts}
-
+\RequirePackage{algorithm}
+\RequirePackage{algorithmic}
 % 主要字体为Times New Roman和宋体
 % 模板某些标题需要华文行楷和32号字
 
