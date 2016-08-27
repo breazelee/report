@@ -134,7 +134,7 @@ The LaTeX template for midterm report of BUAA]
         name = {,},
         aftername = {\quad},
         number = \arabic{chapter},
-        beforeskip= {-.5\baselineskip},
+        beforeskip= {.5\baselineskip},
         afterskip= {.5\baselineskip}
     },
     section = {
